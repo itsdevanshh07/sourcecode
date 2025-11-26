@@ -1,4 +1,5 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
@@ -9,10 +10,20 @@ export const generatePdf = async (htmlContent, filename) => {
     const tempFilePath = path.join(os.tmpdir(), filename);
 
     try {
+        // Use chromium for serverless, fallback to local for development
+        const executablePath = process.env.VERCEL
+            ? await chromium.executablePath()
+            : process.platform === 'win32'
+                ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+                : '/usr/bin/google-chrome';
+
         browser = await puppeteer.launch({
-            headless: "new",
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: process.env.VERCEL ? chromium.args : ['--no-sandbox', '--disable-setuid-sandbox'],
+            defaultViewport: chromium.defaultViewport,
+            executablePath,
+            headless: chromium.headless || "new",
         });
+
         const page = await browser.newPage();
 
         await page.setContent(htmlContent, { waitUntil: 'networkidle0' });
