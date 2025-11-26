@@ -34,7 +34,12 @@ await connectCloudinary();
 // --------------------------------------
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://sourcecode-client.vercel.app",
+      "https://sourcecode-gold.vercel.app"
+    ],
     credentials: true,
   })
 );
