@@ -78,6 +78,23 @@ app.get("/", (req, res) => {
   res.send("ASAP Backend running successfully 🚀");
 });
 
+// Health check endpoint for AI service
+app.get("/api/health", (req, res) => {
+  const hasGroqKey = !!process.env.GROQ_API_KEY;
+  const hasCloudinary = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY);
+  const hasMongoDB = !!process.env.MONGODB_URI;
+
+  res.json({
+    status: "ok",
+    services: {
+      groq: hasGroqKey ? "configured" : "missing",
+      cloudinary: hasCloudinary ? "configured" : "missing",
+      mongodb: hasMongoDB ? "configured" : "missing"
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Sentry test route
 app.get("/debug-sentry", function (req, res) {
   throw new Error("Sentry test error");
