@@ -13,7 +13,13 @@ export const chatWithAI = async (req, res) => {
         const reply = await generateChatResponse(message, history);
         return res.json({ reply });
     } catch (error) {
-        console.error("AI Chat Failed, switching to fallback:", error.message);
+        console.error("AI Chat Failed, switching to fallback:");
+        console.error("Error details:", {
+            message: error.message,
+            code: error.code,
+            status: error.status,
+            type: error.constructor.name
+        });
 
         // Fallback mechanism
         const fallbackReply = getFallbackResponse(message);

@@ -5,8 +5,10 @@ let groq = null;
 
 if (GROQ_API_KEY) {
     groq = new Groq({ apiKey: GROQ_API_KEY });
+    console.log("✅ Groq AI Service initialized successfully");
 } else {
-    console.warn("⚠️ GROQ_API_KEY is missing. AI features will be disabled.");
+    console.error("❌ GROQ_API_KEY is missing. AI features will be disabled.");
+    console.log("Available env vars:", Object.keys(process.env).filter(k => k.includes('GROQ')));
 }
 
 export const generateChatResponse = async (message, history = []) => {
