@@ -1,6 +1,8 @@
-import { useContext, useRef } from 'react'
+import React, { useContext, useRef } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext'
+import { MotionWrapper } from '../lib/motion.jsx'
+import { Search, MapPin } from 'lucide-react'
 
 const Hero = () => {
 
@@ -19,42 +21,50 @@ const Hero = () => {
 
     return (
         <div className='container 2xl:px-20 mx-auto my-10'>
-            <div className='bg-gradient-to-r from-purple-800 to-purple-950 text-white py-16 text-center mx-2 rounded-xl'>
-                <h2 className='text-2xl md:text-3xl lg:text-4xl font-medium mb-4'>Over 10,000+ jobs to apply</h2>
-                <p className='mb-8 max-w-xl mx-auto text-sm font-light px-5'>Your Next Big Career Move Starts Right Here - Explore the Best Job Opportunities and Take the First Step Toward Your Future!</p>
-                <div className='flex items-center justify-between bg-white rounded text-gray-600 max-w-xl pl-4 mx-4 sm:mx-auto'>
-                    <div className='flex items-center'>
-                        <img className='h-4 sm:h-5' src={assets.search_icon} alt="" />
+            <MotionWrapper variant="staggerContainer" className='bg-gradient-to-r from-navy to-navy-dark dark:from-navy-dark dark:to-black text-white py-20 text-center mx-2 rounded-3xl shadow-xl relative overflow-hidden'>
+
+                {/* Decorative background elements */}
+                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+
+                <MotionWrapper variant="slideUp">
+                    <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight tracking-tight'>
+                        Find Your Dream Job <br className='hidden md:block' />
+                        <span className='text-sky'>Build Your Future</span>
+                    </h2>
+                </MotionWrapper>
+
+                <MotionWrapper variant="slideUp">
+                    <p className='mb-10 max-w-2xl mx-auto text-base md:text-lg font-light px-5 text-cream/90'>
+                        Explore thousands of job opportunities with top companies.
+                        Create your resume, practice interviews, and get hired.
+                    </p>
+                </MotionWrapper>
+
+                <MotionWrapper variant="scaleIn" className='flex flex-col sm:flex-row items-center justify-between bg-white dark:bg-navy rounded-full text-navy dark:text-cream max-w-2xl pl-6 pr-2 py-2 mx-4 sm:mx-auto shadow-lg'>
+                    <div className='flex items-center w-full sm:w-1/2 border-b sm:border-b-0 sm:border-r border-sky/30 mb-2 sm:mb-0'>
+                        <Search className='text-sky mr-3' size={20} />
                         <input type="text"
-                            placeholder='Search for jobs'
-                            className='max-sm:text-xs p-2 rounded outline-none w-full'
+                            placeholder='Job title, keywords...'
+                            className='text-sm p-2 rounded outline-none w-full bg-transparent dark:text-cream dark:placeholder-cream/50 placeholder-navy/60'
                             ref={titleRef}
                         />
                     </div>
-                    <div className='flex items-center'>
-                        <img className='h-4 sm:h-5' src={assets.location_icon} alt="" />
+                    <div className='flex items-center w-full sm:w-1/2 pl-0 sm:pl-4 mb-2 sm:mb-0'>
+                        <MapPin className='text-sky mr-3' size={20} />
                         <input type="text"
                             placeholder='Location'
-                            className='max-sm:text-xs p-2 rounded outline-none w-full'
+                            className='text-sm p-2 rounded outline-none w-full bg-transparent dark:text-cream dark:placeholder-cream/50 placeholder-navy/60'
                             ref={locationRef}
                         />
                     </div>
-                    <button onClick={onSearch} className='bg-blue-600 px-6 py-2 rounded text-white m-1'>Search</button>
-                </div>
-            </div>
-
-            <div className='border border-gray-300 shadow-md mx-2 mt-5 p-6 rounded-md flex'>
-                <div className='flex justify-center gap-10 lg:gap-16 flex-wrap'>
-                    <p className='font-medium'>Trusted by</p>
-                    <img className='h-6' src={assets.microsoft_logo} alt="" />
-                    <img className='h-6' src={assets.walmart_logo} alt="" />
-                    <img className='h-6' src={assets.accenture_logo} alt="" />
-                    <img className='h-6' src={assets.samsung_logo} alt="" />
-                    <img className='h-6' src={assets.amazon_logo} alt="" />
-                    <img className='h-6' src={assets.adobe_logo} alt="" />
-                </div>
-            </div>
-
+                    <button
+                        onClick={onSearch}
+                        className='bg-sky hover:bg-sky/80 text-navy px-8 py-3 rounded-full m-1 transition-all hover:shadow-md font-medium w-full sm:w-auto'
+                    >
+                        Search
+                    </button>
+                </MotionWrapper>
+            </MotionWrapper>
         </div>
     )
 }

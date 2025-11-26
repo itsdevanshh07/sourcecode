@@ -1,0 +1,9 @@
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Crown Icon -->
+  <path d="M85 10 L100 25 L115 10 L130 25 L145 10 L135 50 H95 L85 10 Z" fill="#EAB308" stroke="#FEF08A" stroke-width="2" stroke-linejoin="round"/>
+  
+  <!-- ASAP Text -->
+  <text x="50%" y="75" text-anchor="middle" font-family="Verdana, sans-serif" font-size="48" font-weight="900" fill="#FFFFFF" letter-spacing="2">
+    ASAP
+  </text>
+</svg>

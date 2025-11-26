@@ -2,12 +2,12 @@ import { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import Loading from '../components/Loading'
-import Navbar from '../components/Navbar'
+
 import { assets } from '../assets/assets'
 import kconvert from 'k-convert';
 import moment from 'moment';
 import JobCard from '../components/JobCard'
-import Footer from '../components/Footer'
+
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useAuth } from '@clerk/clerk-react'
@@ -93,7 +93,7 @@ const ApplyJob = () => {
 
   return JobData ? (
     <>
-      <Navbar />
+
 
       <div className='min-h-screen flex flex-col py-10 container px-4 2xl:px-20 mx-auto'>
         <div className='bg-white text-black rounded-lg w-ful'>
@@ -152,7 +152,7 @@ const ApplyJob = () => {
 
         </div>
       </div>
-      <Footer />
+
     </>
   ) : (
     <Loading />

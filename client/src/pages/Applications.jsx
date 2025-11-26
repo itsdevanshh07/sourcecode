@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
+
 import { assets } from '../assets/assets'
 import moment from 'moment'
-import Footer from '../components/Footer'
+
 import { AppContext } from '../context/AppContext'
 import { useAuth, useUser } from '@clerk/clerk-react'
 import axios from 'axios'
@@ -56,7 +56,7 @@ const Applications = () => {
 
   return userData ? (
     <>
-      <Navbar />
+
       <div className='container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10'>
         <h2 className='text-xl font-semibold'>Your Resume</h2>
         <div className='flex gap-2 mb-6 mt-3'>
@@ -111,7 +111,7 @@ const Applications = () => {
           </tbody>
         </table>
       </div>
-      <Footer />
+
     </>
   ) : <Loading />
 }

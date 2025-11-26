@@ -1,44 +1,100 @@
-import './config/instrument.js'
-import express from 'express'
-import cors from 'cors'
-import 'dotenv/config'
-import connectDB from './config/db.js'
+// server.js
+import "dotenv/config";
+import "./config/instrument.js";
+import express from "express";
+import cors from "cors";
+// import "dotenv/config"; // Moved to top
+import path from "path";
 import * as Sentry from "@sentry/node";
-import { clerkWebhooks } from './controllers/webhooks.js'
-import companyRoutes from './routes/companyRoutes.js'
-import connectCloudinary from './config/cloudinary.js'
-import jobRoutes from './routes/jobRoutes.js'
-import userRoutes from './routes/userRoutes.js'
-import { clerkMiddleware } from '@clerk/express'
 
+// Database + Cloudinary
+import connectDB from "./config/db.js";
+import connectCloudinary from "./config/cloudinary.js";
 
-// Initialize Express
-const app = express()
-
-// Connect to database
-connectDB()
-await connectCloudinary()
-
-// Middlewares
-app.use(cors())
-app.use(express.json())
-app.use(clerkMiddleware())
+// Clerk (v4+)
+import { clerkMiddleware, requireAuth } from "@clerk/express";
 
 // Routes
-app.get('/', (req, res) => res.send("API Working"))
-app.get("/debug-sentry", function mainHandler(req, res) {
-  throw new Error("My first Sentry error!");
+import chatRouter from "./routes/chatRoutes.js";   // <-- NEW AI ROUTES
+import companyRoutes from "./routes/companyRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
+import { clerkWebhooks } from "./controllers/webhooks.js";
+
+const app = express();
+
+// --------------------------------------
+// INIT SERVICES
+// --------------------------------------
+await connectDB();
+await connectCloudinary();
+
+// --------------------------------------
+// MIDDLEWARE
+// --------------------------------------
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+  })
+);
+
+app.use(express.json({ limit: "3mb" }));
+app.use(express.urlencoded({ extended: true }));
+
+// --------------------------------------
+// PUBLIC ROUTES (NO CLERK)
+// AI Chat + Resume Builder (Gemini)
+// --------------------------------------
+app.use("/api", chatRouter);
+
+// Serve resume files
+app.use("/resumes", express.static(path.join(process.cwd(), "resumes")));
+
+// Webhooks (Clerk Webhooks work even without clerkMiddleware)
+app.post("/webhooks", clerkWebhooks);
+
+// --------------------------------------
+// CLERK GLOBAL MIDDLEWARE
+// --------------------------------------
+app.use(clerkMiddleware());
+
+// --------------------------------------
+// PROTECTED ROUTES (CLERK REQUIRED)
+// --------------------------------------
+app.use("/api/company", companyRoutes);
+app.use("/api/users", requireAuth(), userRoutes);
+app.use("/api/jobs", requireAuth(), jobRoutes);
+
+// --------------------------------------
+// ROOT ENDPOINT
+// --------------------------------------
+app.get("/", (req, res) => {
+  res.send("ASAP Backend running successfully 🚀");
 });
-app.post('/webhooks', clerkWebhooks)
-app.use('/api/company', companyRoutes)
-app.use('/api/jobs', jobRoutes)
-app.use('/api/users', userRoutes)
 
-// Port
-const PORT = process.env.PORT || 5000
+// Sentry test route
+app.get("/debug-sentry", function (req, res) {
+  throw new Error("Sentry test error");
+});
 
+// Setup Sentry error handler
 Sentry.setupExpressErrorHandler(app);
 
+// --------------------------------------
+// START SERVER
+// --------------------------------------
+const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-})
+  console.log(`\n===================================`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`===================================`);
+  console.log("🔹 Public AI Routes:");
+  console.log("   → POST /api/chat");
+  console.log("   → POST /api/resume");
+  console.log("🔹 Protected with Clerk:");
+  console.log("   → /api/company");
+  console.log("   → /api/users");
+  console.log("   → /api/jobs");
+});

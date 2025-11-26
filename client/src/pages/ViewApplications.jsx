@@ -4,49 +4,42 @@ import { AppContext } from '../context/AppContext'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import Loading from '../components/Loading'
+import { FileText, MapPin, Download, CheckCircle, XCircle, MoreHorizontal, User } from 'lucide-react'
 
 const ViewApplications = () => {
 
   const { backendUrl, companyToken } = useContext(AppContext)
-
   const [applicants, setApplicants] = useState(false)
 
   // Function to fetch company Job Applications data 
   const fetchCompanyJobApplications = async () => {
-
     try {
-
       const { data } = await axios.get(backendUrl + '/api/company/applicants',
         { headers: { token: companyToken } }
       )
-
       if (data.success) {
         setApplicants(data.applications.reverse())
       } else {
         toast.error(data.message)
       }
-
     } catch (error) {
       toast.error(error.message)
     }
-
   }
 
   // Function to Update Job Applications Status 
   const changeJobApplicationStatus = async (id, status) => {
     try {
-
       const { data } = await axios.post(backendUrl + '/api/company/change-status',
         { id, status },
         { headers: { token: companyToken } }
       )
-
       if (data.success) {
         fetchCompanyJobApplications()
+        toast.success(`Application ${status}`)
       } else {
         toast.error(data.message)
       }
-
     } catch (error) {
       toast.error(error.message)
     }
@@ -58,61 +51,138 @@ const ViewApplications = () => {
     }
   }, [companyToken])
 
-  return applicants ? applicants.length === 0 ? (
-    <div className='flex items-center justify-center h-[70vh]'>
-      <p className='text-xl sm:text-2xl'>No Applications Available</p>
-    </div>
-  ) : (
-    <div className='container mx-auto p-4'>
-      <div>
-        <table className='w-full max-w-4xl bg-white border border-gray-200 max-sm:text-sm'>
-          <thead>
-            <tr className='border-b'>
-              <th className='py-2 px-4 text-left'>#</th>
-              <th className='py-2 px-4 text-left'>User name</th>
-              <th className='py-2 px-4 text-left max-sm:hidden'>Job Title</th>
-              <th className='py-2 px-4 text-left max-sm:hidden'>Location</th>
-              <th className='py-2 px-4 text-left'>Resume</th>
-              <th className='py-2 px-4 text-left'>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {applicants.filter(item => item.jobId && item.userId).map((applicant, index) => (
-              <tr key={index} className='text-gray-700'>
-                <td className='py-2 px-4 border-b text-center'>{index + 1}</td>
-                <td className='py-2 px-4 border-b text-center flex items-center'>
-                  <img className='w-10 h-10 rounded-full mr-3 max-sm:hidden' src={applicant.userId.image} alt="" />
-                  <span>{applicant.userId.name}</span>
-                </td>
-                <td className='py-2 px-4 border-b max-sm:hidden'>{applicant.jobId.title}</td>
-                <td className='py-2 px-4 border-b max-sm:hidden'>{applicant.jobId.location}</td>
-                <td className='py-2 px-4 border-b'>
-                  <a href={applicant.userId.resume} target='_blank'
-                    className='bg-blue-50 text-blue-400 px-3 py-1 rounded inline-flex gap-2 items-center'
-                  >
-                    Resume <img src={assets.resume_download_icon} alt="" />
-                  </a>
-                </td>
-                <td className='py-2 px-4 border-b relative'>
-                  {applicant.status === "Pending"
-                    ? <div className='relative inline-block text-left group'>
-                      <button className='text-gray-500 action-button'>...</button>
-                      <div className='z-10 hidden absolute right-0 md:left-0 top-0 mt-2 w-32 bg-white border border-gray-200 rounded shadow group-hover:block'>
-                        <button onClick={() => changeJobApplicationStatus(applicant._id, 'Accepted')} className='block w-full text-left px-4 py-2 text-blue-500 hover:bg-gray-100'>Accept</button>
-                        <button onClick={() => changeJobApplicationStatus(applicant._id, 'Rejected')} className='block w-full text-left px-4 py-2 text-red-500 hover:bg-gray-100'>Reject</button>
-                      </div>
-                    </div>
-                    : <div>{applicant.status}</div>
-                  }
+  if (!applicants) {
+    return <Loading />
+  }
 
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  return (
+    <div className='max-w-7xl mx-auto'>
+
+      {/* Header */}
+      <div className='mb-6'>
+        <h1 className='text-2xl font-bold text-gray-900 dark:text-white'>Applications</h1>
+        <p className='text-gray-500 dark:text-gray-400 mt-1'>Manage and review candidate applications.</p>
+      </div>
+
+      {/* Content */}
+      <div className='bg-white dark:bg-card-bg rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden'>
+        {applicants.length === 0 ? (
+          <div className='flex flex-col items-center justify-center py-16 px-4 text-center'>
+            <div className='bg-gray-100 dark:bg-gray-800 p-4 rounded-full mb-4'>
+              <FileText size={32} className='text-gray-400' />
+            </div>
+            <h3 className='text-lg font-medium text-gray-900 dark:text-white'>No applications yet</h3>
+            <p className='text-gray-500 dark:text-gray-400 mt-1 max-w-sm'>
+              Applications for your posted jobs will appear here.
+            </p>
+          </div>
+        ) : (
+          <div className='overflow-x-auto'>
+            <table className='min-w-full divide-y divide-gray-200 dark:divide-gray-700'>
+              <thead className='bg-gray-50 dark:bg-gray-800/50'>
+                <tr>
+                  <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                    #
+                  </th>
+                  <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                    Candidate
+                  </th>
+                  <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                    Job Title
+                  </th>
+                  <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                    Location
+                  </th>
+                  <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                    Resume
+                  </th>
+                  <th scope="col" className='px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className='bg-white dark:bg-card-bg divide-y divide-gray-200 dark:divide-gray-700'>
+                {applicants.filter(item => item.jobId && item.userId).map((applicant, index) => (
+                  <tr key={index} className='hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors'>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400'>
+                      {index + 1}
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <div className='flex items-center'>
+                        {applicant.userId.image ? (
+                          <img className='h-10 w-10 rounded-full object-cover border border-gray-200 dark:border-gray-600' src={applicant.userId.image} alt="" />
+                        ) : (
+                          <div className='h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-400'>
+                            <User size={20} />
+                          </div>
+                        )}
+                        <div className='ml-4'>
+                          <div className='text-sm font-medium text-gray-900 dark:text-white'>{applicant.userId.name}</div>
+                          <div className='text-xs text-gray-500 dark:text-gray-400'>Applied recently</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <div className='text-sm text-gray-900 dark:text-white'>{applicant.jobId.title}</div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <div className='flex items-center text-sm text-gray-500 dark:text-gray-400'>
+                        <MapPin size={16} className='mr-2' />
+                        {applicant.jobId.location}
+                      </div>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap'>
+                      <a
+                        href={applicant.userId.resume}
+                        target='_blank'
+                        rel="noreferrer"
+                        className='inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 shadow-sm text-xs font-medium rounded-md text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
+                      >
+                        <Download size={14} className='mr-2' />
+                        Resume
+                      </a>
+                    </td>
+                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
+                      {applicant.status === "Pending" ? (
+                        <div className='relative group inline-block text-left'>
+                          <button className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700'>
+                            <MoreHorizontal size={20} />
+                          </button>
+                          <div className='hidden group-hover:block absolute right-0 bottom-full mb-2 w-32 bg-white dark:bg-card-bg rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-10 overflow-hidden'>
+                            <button
+                              onClick={() => changeJobApplicationStatus(applicant._id, 'Accepted')}
+                              className='flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                            >
+                              <CheckCircle size={16} className='mr-2' />
+                              Accept
+                            </button>
+                            <button
+                              onClick={() => changeJobApplicationStatus(applicant._id, 'Rejected')}
+                              className='flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                            >
+                              <XCircle size={16} className='mr-2' />
+                              Reject
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${applicant.status === 'Accepted'
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                          }`}>
+                          {applicant.status}
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
-  ) : <Loading />
+  )
 }
 
 export default ViewApplications

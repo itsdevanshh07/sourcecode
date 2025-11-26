@@ -1,0 +1,22 @@
+<svg width="260" height="75" viewBox="0 0 260 75" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="navyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1e3a8a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Stylized Rocket Icon -->
+  <g transform="translate(10, 10) scale(1.2)">
+    <path d="M25 0C25 0 10 15 10 30C10 38.2843 16.7157 45 25 45C33.2843 45 40 38.2843 40 30C40 15 25 0 25 0Z" fill="url(#navyGradient)"/>
+    <path d="M25 12C27.7614 12 30 14.2386 30 17C30 19.7614 27.7614 22 25 22C22.2386 22 20 19.7614 20 17C20 14.2386 22.2386 12 25 12Z" fill="white"/>
+    <path d="M10 30L0 40V50L15 42" fill="url(#navyGradient)"/>
+    <path d="M40 30L50 40V50L35 42" fill="url(#navyGradient)"/>
+    <path d="M25 45V55" stroke="url(#navyGradient)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  
+  <!-- ASAP Text -->
+  <text x="80" y="55" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="900" fill="url(#navyGradient)" letter-spacing="-1">
+    ASAP
+  </text>
+</svg>
