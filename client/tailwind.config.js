@@ -9,11 +9,11 @@ export default {
   ],
   theme: {
     extend: {
-      // Restored Purple & Indigo Palette (Matching logo)
+      // Restored Blue & Beige Palette (Matching screenshots)
       colors: {
-        primary: '#7C3AED',       // Violet-600
-        secondary: '#4F46E5',     // Indigo-600
-        accent: '#8b5cf6',        // Violet-500
+        primary: '#2563EB',       // Blue-600
+        secondary: '#1D4ED8',     // Blue-700
+        accent: '#60A5FA',        // Blue-400
 
         // Backgrounds
         "dark-bg": "#0f172a",     // Slate-900
@@ -21,10 +21,10 @@ export default {
         "light-bg": "#f8fafc",    // Slate-50
 
         // Mappings for existing class usage
-        'navy': '#4c1d95',        // Violet-900 (Deep Purple)
-        'navy-dark': '#2e1065',   // Violet-950 (Darkest Purple)
-        'sky': '#a78bfa',         // Violet-400 (Light Purple)
-        'cream': '#ffffff',       // White
+        'navy': '#1e3a8a',        // Blue-900
+        'navy-dark': '#020617',   // Slate-950
+        'sky': '#93c5fd',         // Blue-300
+        'cream': '#EAECC6',       // Beige/Cream from screenshot
       }
     },
   },

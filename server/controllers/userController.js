@@ -5,10 +5,8 @@ import { v2 as cloudinary } from "cloudinary"
 
 // Get User Data
 export const getUserData = async (req, res) => {
-
-    const userId = req.auth.userId
-
     try {
+        const userId = req.auth.userId
 
         const user = await User.findById(userId)
 
@@ -21,7 +19,6 @@ export const getUserData = async (req, res) => {
     } catch (error) {
         res.json({ success: false, message: error.message })
     }
-
 }
 
 
@@ -30,9 +27,8 @@ export const applyForJob = async (req, res) => {
 
     const { jobId } = req.body
 
-    const userId = req.auth.userId
-
     try {
+        const userId = req.auth.userId
 
         const isAlreadyApplied = await JobApplication.find({ jobId, userId })
 

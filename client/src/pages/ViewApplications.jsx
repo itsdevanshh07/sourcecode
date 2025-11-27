@@ -144,31 +144,28 @@ const ViewApplications = () => {
                     </td>
                     <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>
                       {applicant.status === "Pending" ? (
-                        <div className='relative group inline-block text-left'>
-                          <button className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700'>
-                            <MoreHorizontal size={20} />
+                        <div className='flex items-center gap-2'>
+                          <button
+                            onClick={() => changeJobApplicationStatus(applicant._id, 'Accepted')}
+                            className='flex items-center gap-1.5 px-3 py-1.5 bg-green-50 text-green-700 border border-green-200 rounded-lg hover:bg-green-100 hover:border-green-300 transition-all text-xs font-medium dark:bg-green-900/20 dark:text-green-400 dark:border-green-800 dark:hover:bg-green-900/30'
+                            title="Accept Application"
+                          >
+                            <CheckCircle size={14} />
+                            Accept
                           </button>
-                          <div className='hidden group-hover:block absolute right-0 bottom-full mb-2 w-32 bg-white dark:bg-card-bg rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-10 overflow-hidden'>
-                            <button
-                              onClick={() => changeJobApplicationStatus(applicant._id, 'Accepted')}
-                              className='flex items-center w-full px-4 py-2 text-sm text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
-                            >
-                              <CheckCircle size={16} className='mr-2' />
-                              Accept
-                            </button>
-                            <button
-                              onClick={() => changeJobApplicationStatus(applicant._id, 'Rejected')}
-                              className='flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
-                            >
-                              <XCircle size={16} className='mr-2' />
-                              Reject
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => changeJobApplicationStatus(applicant._id, 'Rejected')}
+                            className='flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-all text-xs font-medium dark:bg-red-900/20 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/30'
+                            title="Reject Application"
+                          >
+                            <XCircle size={14} />
+                            Reject
+                          </button>
                         </div>
                       ) : (
                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${applicant.status === 'Accepted'
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                          : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
                           }`}>
                           {applicant.status}
                         </span>

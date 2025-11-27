@@ -61,21 +61,20 @@ const Dashboard = () => {
                             <p className='hidden sm:block font-medium text-gray-700 dark:text-gray-200'>
                                 Welcome, {companyData.name}
                             </p>
-                            <div className='relative group'>
+                            <div className='flex items-center gap-3'>
                                 <img
-                                    className='w-10 h-10 border-2 border-gray-200 dark:border-gray-600 rounded-full object-cover cursor-pointer'
+                                    className='w-10 h-10 border-2 border-gray-200 dark:border-gray-600 rounded-full object-cover'
                                     src={companyData.image}
                                     alt="Company Logo"
                                 />
-                                <div className='absolute hidden group-hover:block top-full right-0 mt-2 w-48 bg-white dark:bg-card-bg rounded-md shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50'>
-                                    <button
-                                        onClick={logout}
-                                        className='flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                    >
-                                        <LogOut size={16} />
-                                        Logout
-                                    </button>
-                                </div>
+                                <button
+                                    onClick={logout}
+                                    className='flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors border border-gray-200 dark:border-gray-600 bg-white dark:bg-card-bg'
+                                    title="Logout"
+                                >
+                                    <LogOut size={18} />
+                                    <span className="hidden sm:inline">Logout</span>
+                                </button>
                             </div>
                         </div>
                     )}

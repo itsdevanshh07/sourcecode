@@ -53,7 +53,8 @@ export function ResumeBuilder({ apiBase = '' }) {
       if (data.resume) {
         setForm(prev => ({ ...prev, ...data.resume }));
         if (data.pdfUrl) {
-          setPdfUrl(`${base}${data.pdfUrl}`);
+          const url = data.pdfUrl.startsWith('http') ? data.pdfUrl : `${base}${data.pdfUrl}`;
+          setPdfUrl(url);
         }
         setShowAiModal(false);
       } else {
@@ -66,6 +67,28 @@ export function ResumeBuilder({ apiBase = '' }) {
       setAiLoading(false);
     }
   }
+
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    if (!pdfUrl) return;
+
+    try {
+      const response = await fetch(pdfUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Resume_${form.name.replace(/\s+/g, '_') || 'Generated'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download failed:', error);
+      // Fallback to opening in new tab if blob fetch fails
+      window.open(pdfUrl, '_blank');
+    }
+  };
 
   return (
     <motion.div
@@ -140,9 +163,12 @@ export function ResumeBuilder({ apiBase = '' }) {
             variants={scaleIn}
           >
             <iframe src={pdfUrl} className="w-full flex-1 rounded-lg border shadow-sm" title="Resume Preview" />
-            <a href={pdfUrl} download="resume.pdf" className="w-full py-2 bg-green-600 text-white text-center rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2">
+            <button
+              onClick={handleDownload}
+              className="w-full py-2 bg-green-600 text-white text-center rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+            >
               <Download size={18} /> Download PDF
-            </a>
+            </button>
           </motion.div>
         ) : (
           <div className="text-center text-gray-500">

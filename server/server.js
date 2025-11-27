@@ -86,7 +86,7 @@ app.use(clerkMiddleware());
 // --------------------------------------
 app.use("/api/company", companyRoutes);
 app.use("/api/users", requireAuth(), userRoutes);
-app.use("/api/jobs", requireAuth(), jobRoutes);
+app.use("/api/jobs", jobRoutes);
 
 // --------------------------------------
 // ROOT ENDPOINT
